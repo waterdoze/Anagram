@@ -63,3 +63,51 @@ code {
     width: 100%;
     font-size: 5em;
 }
+
+.duringEndGame{
+    
+}
+
+.PopUp{
+    position: fixed;
+
+    left: 25%;
+    top: 30%;
+
+    width: 50%;
+    
+    border: 1px solid #011627;
+    border-radius: 1em;
+    box-shadow: -2px 5px 5px 0px rgba(0,0,0,0.75);
+
+    background-color: #F9F6EE ;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    
+    color: #011627;
+}
+
+.popUpButton{
+    width: 10em;
+    height: 3em;
+    border: 1px solid #011627;
+    border-radius: 1em;
+    box-shadow: -2px 5px 5px 0px rgba(0,0,0,0.75);
+
+    background-color: #F9F6EE ;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    color: #011627;
+
+    margin: 1em;
+}
+.popUpButton:hover{
+    background-color: #585252e7;
+    color: #F9F6EE;
+}
