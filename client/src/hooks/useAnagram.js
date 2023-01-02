@@ -8,8 +8,19 @@ const useAnagram = (letters) => {
 
     const [usedWords, setUsedWords] = useState([])
 
-    const handleKeyUp = ({ key }) => {
 
+    
+    
+
+    const handleKeyUp = ({ key }) => {
+        var available_letters = []
+        for (let i = 0; i < letters.length; i++) {
+            available_letters[letters[i]] = (available_letters[letters[i]] || 0) + 1
+        }
+        for (let i = 0; i < currentWord.length; i++) {
+            available_letters[currentWord[i]] -= 1
+        }
+        
         if (key === 'Enter') {
 
             if (usedWords.includes(currentWord)) {
@@ -57,15 +68,17 @@ const useAnagram = (letters) => {
             setCurrentWord('')
         }
         if (key === 'Backspace') {
+            available_letters[currentWord[currentWord.length - 1]] += 1
             setCurrentWord((prev) => {
                 return prev.slice(0, -1)
             })
         }
 
-        if (letters.includes(key) && currentWord.length < 6 && !currentWord.includes(key)) {
-
+        if (letters.includes(key.toLowerCase()) && currentWord.length < 6 && available_letters[key.toLowerCase()] > 0) {
+            available_letters[key.toLowerCase()] -= 1
+            console.log(available_letters[key.toLowerCase()])
             setCurrentWord((prev) => {
-                return prev + key
+                return prev + key.toLowerCase()
             })
         }
 
