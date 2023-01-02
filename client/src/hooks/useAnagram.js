@@ -20,15 +20,16 @@ const useAnagram = (letters) => {
         for (let i = 0; i < currentWord.length; i++) {
             available_letters[currentWord[i]] -= 1
         }
-        
+
         if (key === 'Enter') {
 
             if (usedWords.includes(currentWord)) {
                 console.log('already guessed this word, try again please')
                 return
             }
-            else if (currentWord.length < 3) {
+            if (currentWord.length < 3) {
                 console.log('word too short')
+                return
             }
 
             setUsedWords((prevUsedWords) => {
