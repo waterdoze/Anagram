@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import '../css/index.css'
+
 
 const useAnagram = (letters) => {
 
@@ -8,6 +10,8 @@ const useAnagram = (letters) => {
     const [usedWords, setUsedWords] = useState([])
 
     const handleKeyUp = ({ key, endOfGame, resetGame }) => {
+
+        //hashmap of the available letters to use
         var available_letters = []
         for (let i = 0; i < letters.length; i++) {
             available_letters[letters[i]] = (available_letters[letters[i]] || 0) + 1
@@ -15,14 +19,33 @@ const useAnagram = (letters) => {
         for (let i = 0; i < currentWord.length; i++) {
             available_letters[currentWord[i]] -= 1
         }
+
+        //hashmap of the indexes of letters available to use
+        var letter_indexes = []
+        for (let i = 0; i < letters.length; i++) {
+            letter_indexes[letters[i]] = letter_indexes[letters[i]] || []
+            letter_indexes[letters[i]].push(i)
+        }
+        var last_letter_index = -1
+        for (let i = 0; i < currentWord.length; i++) {
+            if(i === currentWord.length-1){
+                last_letter_index = letter_indexes[currentWord[i]][0]
+            }
+            letter_indexes[currentWord[i]].shift()
+        }
+        console.log(letter_indexes)
         
         //check if key pressed is enter and if the word has been guessed before and if the word is long enough and TODO: if the word is within the dictionary
         if (key === 'Enter') {
 
-            if (usedWords.includes(currentWord)) {
-                console.log('already guessed this word, try again please')
+            if (usedWords.includes(currentWord) || currentWord.length < 3) {
+                console.log('already guessed this word, try again please : or word is too short')
                 if(endOfGame) {
                     setCurrentWord('')
+                    for(let i = 0; i < letters.length; i++){
+                        var letter = document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')')
+                        letter.style.backgroundColor = '#444440'
+                    }
                 }
                 if(resetGame){
                     setCurrentWord('')
@@ -30,21 +53,10 @@ const useAnagram = (letters) => {
                     setScore(0)
                     setUsedWords([])
                 }
+                
                 return
             }
-            if (currentWord.length < 3) {
-                console.log('word too short')
-                if(endOfGame) {
-                    setCurrentWord('')
-                }
-                if(resetGame){
-                    setCurrentWord('')
-                    setAmountGuessed(0)
-                    setScore(0)
-                    setUsedWords([])
-                }
-                return
-            }
+            
 
             setUsedWords((prevUsedWords) => {
                 return [...prevUsedWords, currentWord]
@@ -88,9 +100,24 @@ const useAnagram = (letters) => {
                 setScore(0)
                 setUsedWords([])
             }
+            //unblackout all the letters
+            
+            for(let i = 0; i < letters.length; i++){
+                var letter = document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')')
+                letter.style.backgroundColor = '#444440'
+            }
+
         }
         if (key === 'Backspace') {
+            if(currentWord.length === 0) {
+                return
+            }
             available_letters[currentWord[currentWord.length - 1]] += 1
+            //unblackout the letter that was just pressed
+            
+            var letter = document.querySelector('.row.keys>div:nth-child(' + (last_letter_index + 1) + ')')
+            letter.style.backgroundColor = '#444440'
+
             setCurrentWord((prev) => {
                 return prev.slice(0, -1)
             })
@@ -98,10 +125,15 @@ const useAnagram = (letters) => {
         //check if key pressed is a letter that is an available letter and if the current word is less than 6 letters long
         if (letters.includes(key.toLowerCase()) && currentWord.length < 6 && available_letters[key.toLowerCase()] > 0) {
             available_letters[key.toLowerCase()] -= 1
-            console.log(available_letters[key.toLowerCase()])
             setCurrentWord((prev) => {
                 return prev + key.toLowerCase()
             })
+
+            //blackout the letter that was just pressed
+            var letter_index = letter_indexes[key.toLowerCase()].shift()
+            var letter_i = document.querySelector('.row.keys>div:nth-child(' + (letter_index + 1) + ')')
+            letter_i.style.backgroundColor = 'rgb(37, 35, 35)'
+            
         }
 
         console.log(currentWord)

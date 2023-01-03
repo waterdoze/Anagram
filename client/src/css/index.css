@@ -43,8 +43,8 @@ code {
     border-radius: .8rem;
     border-color: #444440;
     background-color: #444440;
-
 }
+
 
 .scoreboard {
     display: flex;
@@ -62,10 +62,6 @@ code {
 .scoreboard>div {
     width: 100%;
     font-size: 5em;
-}
-
-.duringEndGame{
-    
 }
 
 .PopUp{

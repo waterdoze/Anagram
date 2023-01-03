@@ -8,7 +8,7 @@ const EndGamePopUp = ({ score, amountGuessed, setEndGamePopUp, setStartGamePopUp
             <h2>Score: {score}</h2>
             <h2>Words Guessed: {amountGuessed}</h2>
             
-            <button className = "popUpButton" onClick={() => {setEndGamePopUp(false); setStartGamePopUp(true); setSeconds(7); handleKeyUp({ key: 'Enter' , endOfGame: false, resetGame: true})}}>Play Again</button> 
+            <button className = "popUpButton" onClick={() => {setEndGamePopUp(false); setStartGamePopUp(true); setSeconds(60); handleKeyUp({ key: 'Enter' , endOfGame: false, resetGame: true})}}>Play Again</button> 
         </div>
     );
 }
