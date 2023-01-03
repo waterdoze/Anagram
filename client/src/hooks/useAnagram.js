@@ -7,14 +7,15 @@ const useAnagram = (letters) => {
     const [score, setScore] = useState(0)
     const [usedWords, setUsedWords] = useState([])
 
+    let avl = []
+    for (let i = 0; i < letters.length; i++) {
+        avl[letters[i]] = (avl[letters[i]] || 0) + 1
+    }
+
+    const [availableLetters, setAvailableLetters] = useState(avl)
+
     const handleKeyUp = ({ key }) => {
-        var available_letters = []
-        for (let i = 0; i < letters.length; i++) {
-            available_letters[letters[i]] = (available_letters[letters[i]] || 0) + 1
-        }
-        for (let i = 0; i < currentWord.length; i++) {
-            available_letters[currentWord[i]] -= 1
-        }
+
 
         if (key === 'Enter') {
 
@@ -60,26 +61,32 @@ const useAnagram = (letters) => {
                 default:
                     console.log('huh???')
             }
-
-            console.log('new word guessed:', currentWord, '\namount guessed:', amountGuessed)
             setCurrentWord('')
+            makeAvailable(letters)
         }
+
         if (key === 'Backspace') {
-            available_letters[currentWord[currentWord.length - 1]] += 1
+            setAvailableLetters((prev) => ({...prev, [currentWord[currentWord.length - 1]]: prev[currentWord[currentWord.length - 1]] + 1}))
             setCurrentWord((prev) => {
                 return prev.slice(0, -1)
             })
         }
 
-        if (letters.includes(key.toLowerCase()) && currentWord.length < 6 && available_letters[key.toLowerCase()] > 0) {
-            available_letters[key.toLowerCase()] -= 1
-            console.log(available_letters[key.toLowerCase()])
+        if (letters.includes(key.toLowerCase()) && currentWord.length < 6 && availableLetters[key.toLowerCase()] > 0) {
+            setAvailableLetters((prev) => ({...prev, [key.toLowerCase()]: prev[key.toLowerCase()] - 1}))
             setCurrentWord((prev) => {
                 return prev + key.toLowerCase()
             })
-        }
 
-        console.log(currentWord)
+        }
+    }
+
+    const makeAvailable = (letters) => {
+        let avl = []
+        for (let i = 0; i < letters.length; i++) {
+            avl[letters[i]] = (avl[letters[i]] || 0) + 1
+        }
+        setAvailableLetters(avl)
     }
 
     return { handleKeyUp, currentWord, usedWords, amountGuessed, score }
