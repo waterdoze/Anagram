@@ -6,31 +6,76 @@ import Scoreboard from './Scoreboard'
 import Slots from './Slots'
 import EndGamePopUp from '../hooks/EndGamePopUp'
 import StartGamePopUp from '../hooks/StartGamePopUp'
+import Timer from './Timer'
 
 export default function Anagram({ letterString }) {
 
-    const [endGame, setEndGame] = useState(false);
-    const [startGame, setStartGame] = useState(true);
-    const duringEndGame = endGame ? " duringEndGame" : "";
-    const duringStartGame = startGame ? " duringStartGame" : "";
     const letters = letterString.split("")
+    const [endGame, setEndGame] = useState(false)
+    const [startGame, setStartGame] = useState(true)
     const { handleKeyUp, currentWord, score, amountGuessed } = useAnagram(letters)
 
+    ////////////amount of time allowed each game////////////
+    const [seconds, setSeconds] = useState(60)
+    ////////////////////////////////////////////////////////
+    const [isActive, setIsActive] = useState(false)
+
+    const duringEndGame = endGame ? " duringEndGame" : ""
+    const duringStartGame = startGame ? " duringStartGame" : ""
+
+
+    //TIMER LOGIC//
     useEffect(() => {
+
+        let interval = null
+
+        if (isActive) {
+            interval = setInterval(() => {
+                setSeconds(seconds => seconds - 1)
+            }, 1000)
+        }
+        else if (!isActive) {
+            clearInterval(interval)
+        }
+
+        return () => clearInterval(interval)
+
+    }, [isActive, seconds])
+
+    useEffect(() => {
+
+        if (seconds === 0) {
+            setIsActive(false)
+            setEndGame(true)
+        }
+
+    }, [seconds])
+
+    //KEY PRESS LOGIC//
+    useEffect(() => {
+
         window.addEventListener('keyup', handleKeyUp)
 
-        return () => window.removeEventListener('keyup', handleKeyUp)
-    }, [handleKeyUp])
+        if (endGame || startGame) {
+            window.removeEventListener('keyup', handleKeyUp)
+        }
+
+        return () => {
+            window.removeEventListener('keyup', handleKeyUp)
+        }
+
+    }, [handleKeyUp, endGame, startGame])
+
     return (
-        <div>
-            <div className = {"Game" + duringEndGame + duringStartGame}>
+        <div className='container'>
+            <div className={"Game" + duringEndGame + duringStartGame}>
+                <Timer seconds={seconds} />
                 <Scoreboard score={score} amountGuessed={amountGuessed} />
                 <Slots currentWord={currentWord} />
                 <Keys keys={letters} />
-                <button onClick={()=>setEndGame(true)} className = {duringEndGame}>Pop Up Test</button>
             </div>
             <div>
-                {startGame && <StartGamePopUp highScore ={0} setStartGamePopUp={setStartGame} />}
+                {startGame && <StartGamePopUp highScore={0} setStartGamePopUp={setStartGame} setIsActive={setIsActive} />}
             </div>
             <div>
                 {endGame && <EndGamePopUp score={score} amountGuessed={amountGuessed} setEndGamePopUp={setEndGame} />}

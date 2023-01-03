@@ -5,12 +5,7 @@ const useAnagram = (letters) => {
     const [currentWord, setCurrentWord] = useState('')
     const [amountGuessed, setAmountGuessed] = useState(0)
     const [score, setScore] = useState(0)
-
     const [usedWords, setUsedWords] = useState([])
-
-
-    
-    
 
     const handleKeyUp = ({ key }) => {
         var available_letters = []
@@ -39,7 +34,8 @@ const useAnagram = (letters) => {
             setAmountGuessed((prevAmount) => {
                 return prevAmount + 1
             })
-
+            
+            //allocate points depending on word length
             switch (currentWord.length) {
                 case 3:
                     setScore((prev) => {
