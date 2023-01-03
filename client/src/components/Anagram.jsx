@@ -13,7 +13,7 @@ export default function Anagram({ letterString }) {
     const letters = letterString.split("")
     const [endGame, setEndGame] = useState(false)
     const [startGame, setStartGame] = useState(true)
-    const { handleKeyUp, currentWord, usedWords, score, amountGuessed } = useAnagram(letters)
+    const { handleKeyUp, currentWord, usedWords, score, amountGuessed, availableLetters } = useAnagram(letters)
 
     ////////////amount of time allowed each game////////////
     const [seconds, setSeconds] = useState(7)
@@ -23,7 +23,7 @@ export default function Anagram({ letterString }) {
     const duringEndGame = endGame ? " duringEndGame" : ""
     const duringStartGame = startGame ? " duringStartGame" : ""
 
-
+    console.log(usedWords)
     //TIMER LOGIC//
     useEffect(() => {
 
@@ -52,7 +52,7 @@ export default function Anagram({ letterString }) {
             setEndGame(true)
         }
 
-    }, [seconds])
+    }, [seconds, handleKeyUp])
 
     //KEY PRESS LOGIC//
     useEffect(() => {
@@ -75,7 +75,7 @@ export default function Anagram({ letterString }) {
                 <Timer seconds={seconds} />
                 <Scoreboard score={score} amountGuessed={amountGuessed} />
                 <Slots currentWord={currentWord} />
-                <Keys keys={letters} />
+                <Keys keys={letters} availableLetters={availableLetters} />
             </div>
             <div>
                 {startGame && <StartGamePopUp highScore={0} setStartGamePopUp={setStartGame} setIsActive={setIsActive} />}
