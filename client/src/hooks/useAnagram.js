@@ -7,7 +7,7 @@ const useAnagram = (letters) => {
     const [score, setScore] = useState(0)
     const [usedWords, setUsedWords] = useState([])
 
-    const handleKeyUp = ({ key }) => {
+    const handleKeyUp = ({ key, endOfGame, resetGame }) => {
         var available_letters = []
         for (let i = 0; i < letters.length; i++) {
             available_letters[letters[i]] = (available_letters[letters[i]] || 0) + 1
@@ -15,15 +15,34 @@ const useAnagram = (letters) => {
         for (let i = 0; i < currentWord.length; i++) {
             available_letters[currentWord[i]] -= 1
         }
-
+        
+        //check if key pressed is enter and if the word has been guessed before and if the word is long enough and TODO: if the word is within the dictionary
         if (key === 'Enter') {
 
             if (usedWords.includes(currentWord)) {
                 console.log('already guessed this word, try again please')
+                if(endOfGame) {
+                    setCurrentWord('')
+                }
+                if(resetGame){
+                    setCurrentWord('')
+                    setAmountGuessed(0)
+                    setScore(0)
+                    setUsedWords([])
+                }
                 return
             }
             if (currentWord.length < 3) {
                 console.log('word too short')
+                if(endOfGame) {
+                    setCurrentWord('')
+                }
+                if(resetGame){
+                    setCurrentWord('')
+                    setAmountGuessed(0)
+                    setScore(0)
+                    setUsedWords([])
+                }
                 return
             }
 
@@ -63,6 +82,12 @@ const useAnagram = (letters) => {
 
             console.log('new word guessed:', currentWord, '\namount guessed:', amountGuessed)
             setCurrentWord('')
+            if(resetGame){
+                setCurrentWord('')
+                setAmountGuessed(0)
+                setScore(0)
+                setUsedWords([])
+            }
         }
         if (key === 'Backspace') {
             available_letters[currentWord[currentWord.length - 1]] += 1
@@ -70,7 +95,7 @@ const useAnagram = (letters) => {
                 return prev.slice(0, -1)
             })
         }
-
+        //check if key pressed is a letter that is an available letter and if the current word is less than 6 letters long
         if (letters.includes(key.toLowerCase()) && currentWord.length < 6 && available_letters[key.toLowerCase()] > 0) {
             available_letters[key.toLowerCase()] -= 1
             console.log(available_letters[key.toLowerCase()])

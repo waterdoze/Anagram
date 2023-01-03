@@ -13,10 +13,10 @@ export default function Anagram({ letterString }) {
     const letters = letterString.split("")
     const [endGame, setEndGame] = useState(false)
     const [startGame, setStartGame] = useState(true)
-    const { handleKeyUp, currentWord, score, amountGuessed } = useAnagram(letters)
+    const { handleKeyUp, currentWord, usedWords, score, amountGuessed } = useAnagram(letters)
 
     ////////////amount of time allowed each game////////////
-    const [seconds, setSeconds] = useState(60)
+    const [seconds, setSeconds] = useState(7)
     ////////////////////////////////////////////////////////
     const [isActive, setIsActive] = useState(false)
 
@@ -45,6 +45,9 @@ export default function Anagram({ letterString }) {
     useEffect(() => {
 
         if (seconds === 0) {
+            //stimuate enter was pressed
+            handleKeyUp({ key: 'Enter' , endOfGame: true, resetGame: false})
+
             setIsActive(false)
             setEndGame(true)
         }
@@ -78,7 +81,7 @@ export default function Anagram({ letterString }) {
                 {startGame && <StartGamePopUp highScore={0} setStartGamePopUp={setStartGame} setIsActive={setIsActive} />}
             </div>
             <div>
-                {endGame && <EndGamePopUp score={score} amountGuessed={amountGuessed} setEndGamePopUp={setEndGame} />}
+                {endGame && <EndGamePopUp score={score} amountGuessed={amountGuessed} setEndGamePopUp={setEndGame} setStartGamePopUp={setStartGame} setSeconds={setSeconds} handleKeyUp={handleKeyUp}/>}
             </div>
         </div>
     )
