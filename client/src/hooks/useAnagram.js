@@ -7,24 +7,42 @@ const useAnagram = (letters) => {
     const [score, setScore] = useState(0)
     const [usedWords, setUsedWords] = useState([])
 
-    let avl = []
+    let avl = {}
     for (let i = 0; i < letters.length; i++) {
         avl[letters[i]] = (avl[letters[i]] || 0) + 1
     }
 
     const [availableLetters, setAvailableLetters] = useState(avl)
 
-    const handleKeyUp = ({ key }) => {
+    const handleKeyUp = ({ key, endOfGame, resetGame }) => {
 
 
         if (key === 'Enter') {
 
             if (usedWords.includes(currentWord)) {
                 console.log('already guessed this word, try again please')
+                if(endOfGame) {
+                    setCurrentWord('')
+                }
+                if(resetGame){
+                    setCurrentWord('')
+                    setAmountGuessed(0)
+                    setScore(0)
+                    setUsedWords([])
+                }
                 return
             }
             if (currentWord.length < 3) {
                 console.log('word too short')
+                if(endOfGame) {
+                    setCurrentWord('')
+                }
+                if(resetGame){
+                    setCurrentWord('')
+                    setAmountGuessed(0)
+                    setScore(0)
+                    setUsedWords([])
+                }
                 return
             }
 
@@ -63,6 +81,12 @@ const useAnagram = (letters) => {
             }
             setCurrentWord('')
             makeAvailable(letters)
+            if(resetGame){
+                setCurrentWord('')
+                setAmountGuessed(0)
+                setScore(0)
+                setUsedWords([])
+            }
         }
 
         if (key === 'Backspace') {
@@ -82,14 +106,14 @@ const useAnagram = (letters) => {
     }
 
     const makeAvailable = (letters) => {
-        let avl = []
+        let avl = {}
         for (let i = 0; i < letters.length; i++) {
             avl[letters[i]] = (avl[letters[i]] || 0) + 1
         }
         setAvailableLetters(avl)
     }
 
-    return { handleKeyUp, currentWord, usedWords, amountGuessed, score }
+    return { handleKeyUp, currentWord, usedWords, amountGuessed, score, availableLetters }
 }
 
 export default useAnagram

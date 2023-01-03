@@ -13,17 +13,17 @@ export default function Anagram({ letterString }) {
     const letters = letterString.split("")
     const [endGame, setEndGame] = useState(false)
     const [startGame, setStartGame] = useState(true)
-    const { handleKeyUp, currentWord, score, amountGuessed } = useAnagram(letters)
+    const { handleKeyUp, currentWord, usedWords, score, amountGuessed, availableLetters } = useAnagram(letters)
 
     ////////////amount of time allowed each game////////////
-    const [seconds, setSeconds] = useState(60)
+    const [seconds, setSeconds] = useState(7)
     ////////////////////////////////////////////////////////
     const [isActive, setIsActive] = useState(false)
 
     const duringEndGame = endGame ? " duringEndGame" : ""
     const duringStartGame = startGame ? " duringStartGame" : ""
 
-
+    console.log(usedWords)
     //TIMER LOGIC//
     useEffect(() => {
 
@@ -45,11 +45,14 @@ export default function Anagram({ letterString }) {
     useEffect(() => {
 
         if (seconds === 0) {
+            //stimuate enter was pressed
+            handleKeyUp({ key: 'Enter' , endOfGame: true, resetGame: false})
+
             setIsActive(false)
             setEndGame(true)
         }
 
-    }, [seconds])
+    }, [seconds, handleKeyUp])
 
     //KEY PRESS LOGIC//
     useEffect(() => {
@@ -72,13 +75,13 @@ export default function Anagram({ letterString }) {
                 <Timer seconds={seconds} />
                 <Scoreboard score={score} amountGuessed={amountGuessed} />
                 <Slots currentWord={currentWord} />
-                <Keys keys={letters} />
+                <Keys keys={letters} availableLetters={availableLetters} />
             </div>
             <div>
                 {startGame && <StartGamePopUp highScore={0} setStartGamePopUp={setStartGame} setIsActive={setIsActive} />}
             </div>
             <div>
-                {endGame && <EndGamePopUp score={score} amountGuessed={amountGuessed} setEndGamePopUp={setEndGame} />}
+                {endGame && <EndGamePopUp score={score} amountGuessed={amountGuessed} setEndGamePopUp={setEndGame} setStartGamePopUp={setStartGame} setSeconds={setSeconds} handleKeyUp={handleKeyUp}/>}
             </div>
         </div>
     )
