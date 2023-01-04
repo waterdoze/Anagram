@@ -13,17 +13,16 @@ export default function Anagram({ letterString }) {
     const letters = letterString.split("")
     const [endGame, setEndGame] = useState(false)
     const [startGame, setStartGame] = useState(true)
-    const { handleKeyUp, currentWord, usedWords, score, amountGuessed, availableLetters } = useAnagram(letters)
+    const { handleKeyUp, currentWord, score, amountGuessed, availableLetters } = useAnagram(letters)
 
     ////////////amount of time allowed each game////////////
-    const [seconds, setSeconds] = useState(7)
+    const [seconds, setSeconds] = useState(60)
     ////////////////////////////////////////////////////////
     const [isActive, setIsActive] = useState(false)
 
     const duringEndGame = endGame ? " duringEndGame" : ""
     const duringStartGame = startGame ? " duringStartGame" : ""
 
-    console.log(usedWords)
     //TIMER LOGIC//
     useEffect(() => {
 

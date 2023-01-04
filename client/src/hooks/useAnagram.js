@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import '../css/index.css'
+import Axios from 'axios'
 
 
 const useAnagram = (letters) => {
@@ -28,93 +29,56 @@ const useAnagram = (letters) => {
         }
         var last_letter_index = -1
         for (let i = 0; i < currentWord.length; i++) {
-            if(i === currentWord.length-1){
+            if (i === currentWord.length - 1) {
                 last_letter_index = letter_indexes[currentWord[i]][0]
             }
             letter_indexes[currentWord[i]].shift()
         }
         console.log(letter_indexes)
-        
+
         //check if key pressed is enter and if the word has been guessed before and if the word is long enough and TODO: if the word is within the dictionary
         if (key === 'Enter') {
 
             if (usedWords.includes(currentWord) || currentWord.length < 3) {
                 console.log('already guessed this word, try again please : or word is too short')
-                if(endOfGame) {
+                if (endOfGame) {
                     setCurrentWord('')
-                    for(let i = 0; i < letters.length; i++){
+                    for (let i = 0; i < letters.length; i++) {
                         var letter = document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')')
                         letter.style.backgroundColor = '#444440'
                     }
                 }
-                if(resetGame){
+                if (resetGame) {
                     setCurrentWord('')
                     setAmountGuessed(0)
                     setScore(0)
                     setUsedWords([])
                 }
-                
+
                 return
             }
-            
 
-            setUsedWords((prevUsedWords) => {
-                return [...prevUsedWords, currentWord]
+            Axios.get(`http://localhost:3001/exists/${currentWord}`).then((response) => {
+
+                if (!response.data) {
+                    console.log("word doesn't exist!")
+                }
+                else {
+                    console.log('word found!\n', response.data)
+                    handleCorrectGuess(resetGame)
+                }
+
+                return
             })
-
-            setAmountGuessed((prevAmount) => {
-                return prevAmount + 1
-            })
-            
-            //allocate points depending on word length
-            switch (currentWord.length) {
-                case 3:
-                    setScore((prev) => {
-                        return prev + 100
-                    })
-                    break
-                case 4:
-                    setScore((prev) => {
-                        return prev + 400
-                    })
-                    break
-                case 5:
-                    setScore((prev) => {
-                        return prev + 1200
-                    })
-                    break
-                case 6:
-                    setScore((prev) => {
-                        return prev + 2000
-                    })
-                    break
-                default:
-                    console.log('huh???')
-            }
-
-            console.log('new word guessed:', currentWord, '\namount guessed:', amountGuessed)
-            setCurrentWord('')
-            if(resetGame){
-                setCurrentWord('')
-                setAmountGuessed(0)
-                setScore(0)
-                setUsedWords([])
-            }
-            //unblackout all the letters
-            
-            for(let i = 0; i < letters.length; i++){
-                var letter = document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')')
-                letter.style.backgroundColor = '#444440'
-            }
 
         }
         if (key === 'Backspace') {
-            if(currentWord.length === 0) {
+            if (currentWord.length === 0) {
                 return
             }
             available_letters[currentWord[currentWord.length - 1]] += 1
             //unblackout the letter that was just pressed
-            
+
             var letter = document.querySelector('.row.keys>div:nth-child(' + (last_letter_index + 1) + ')')
             letter.style.backgroundColor = '#444440'
 
@@ -133,13 +97,63 @@ const useAnagram = (letters) => {
             var letter_index = letter_indexes[key.toLowerCase()].shift()
             var letter_i = document.querySelector('.row.keys>div:nth-child(' + (letter_index + 1) + ')')
             letter_i.style.backgroundColor = 'rgb(37, 35, 35)'
-            
+
         }
 
-        console.log(currentWord)
     }
 
-    return { handleKeyUp, currentWord, usedWords, amountGuessed, score }
+    const handleCorrectGuess = (resetGame) => {
+        setUsedWords((prevUsedWords) => {
+            return [...prevUsedWords, currentWord]
+        })
+
+        setAmountGuessed((prevAmount) => {
+            return prevAmount + 1
+        })
+
+        //allocate points depending on word length
+        switch (currentWord.length) {
+            case 3:
+                setScore((prev) => {
+                    return prev + 100
+                })
+                break
+            case 4:
+                setScore((prev) => {
+                    return prev + 400
+                })
+                break
+            case 5:
+                setScore((prev) => {
+                    return prev + 1200
+                })
+                break
+            case 6:
+                setScore((prev) => {
+                    return prev + 2000
+                })
+                break
+            default:
+                console.log('huh???')
+        }
+
+        console.log('new word guessed:', currentWord, '\namount guessed:', amountGuessed)
+        setCurrentWord('')
+        if (resetGame) {
+            setCurrentWord('')
+            setAmountGuessed(0)
+            setScore(0)
+            setUsedWords([])
+        }
+        //unblackout all the letters
+
+        for (let i = 0; i < letters.length; i++) {
+            var letter = document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')')
+            letter.style.backgroundColor = '#444440'
+        }
+    }
+
+    return { handleKeyUp, currentWord, amountGuessed, score }
 }
 
 export default useAnagram
