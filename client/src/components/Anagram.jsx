@@ -5,14 +5,13 @@ import useAnagram from '../hooks/useAnagram'
 import Keys from './Keys'
 import Scoreboard from './Scoreboard'
 import Slots from './Slots'
-import EndGamePopUp from '../hooks/EndGamePopUp'
-import StartGamePopUp from '../hooks/StartGamePopUp'
+import EndGamePopUp from './EndGamePopUp'
+import StartGamePopUp from './StartGamePopUp'
 import Timer from './Timer'
 
 export default function Anagram() {
 
     const [letters, setLetters] = useState(''.split('')) //this is the word that is being guessed
-    console.log(letters)
     const [endGame, setEndGame] = useState(false)
     const [startGame, setStartGame] = useState(true)
     const { handleKeyUp, currentWord, score, amountGuessed, availableLetters } = useAnagram(letters)
