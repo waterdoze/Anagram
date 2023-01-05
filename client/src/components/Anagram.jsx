@@ -77,7 +77,15 @@ export default function Anagram() {
         if(chooseLetters){
             setLetters(''.split(''))
             Axios.get(`http://localhost:3001/randomWord`).then((response) => {
-                setLetters(response.data[0].word.split(''))
+                console.log(response.data[0].word)
+
+                //shuffle letters
+                let scramble = response.data[0].word.split('')
+                for (let i = scramble.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [scramble[i], scramble[j]] = [scramble[j], scramble[i]];
+                }
+                setLetters(scramble)
             })
         }
         setChooseLetters(false)
