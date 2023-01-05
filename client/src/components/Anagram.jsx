@@ -16,7 +16,7 @@ export default function Anagram({ letterString }) {
     const { handleKeyUp, currentWord, score, amountGuessed, availableLetters } = useAnagram(letters)
 
     ////////////amount of time allowed each game////////////
-    const [seconds, setSeconds] = useState(60)
+    const [seconds, setSeconds] = useState(5)
     ////////////////////////////////////////////////////////
     const [isActive, setIsActive] = useState(false)
 
@@ -41,6 +41,7 @@ export default function Anagram({ letterString }) {
 
     }, [isActive, seconds])
 
+    //WHEN TIMER RUNS OUT//
     useEffect(() => {
 
         if (seconds === 0) {
@@ -51,7 +52,7 @@ export default function Anagram({ letterString }) {
             setEndGame(true)
         }
 
-    }, [seconds, handleKeyUp])
+    }, [seconds])
 
     //KEY PRESS LOGIC//
     useEffect(() => {

@@ -72,6 +72,7 @@ const useAnagram = (letters) => {
             })
 
         }
+        
         if (key === 'Backspace') {
             if (currentWord.length === 0) {
                 return
