@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 
 import useAnagram from '../hooks/useAnagram'
+import shuffleLetters from '../hooks/shuffleLetters'
 import Keys from './Keys'
 import Scoreboard from './Scoreboard'
 import Slots from './Slots'
 import EndGamePopUp from './EndGamePopUp'
 import StartGamePopUp from './StartGamePopUp'
 import Timer from './Timer'
+import Refresh from './Refresh'
 
 export default function Anagram() {
 
@@ -80,12 +82,8 @@ export default function Anagram() {
                 console.log(response.data[0].word)
 
                 //shuffle letters
-                let scramble = response.data[0].word.split('')
-                for (let i = scramble.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [scramble[i], scramble[j]] = [scramble[j], scramble[i]];
-                }
-                setLetters(scramble)
+    
+                setLetters(shuffleLetters(response.data[0].word.split("")))
             })
         }
         setChooseLetters(false)
@@ -98,7 +96,9 @@ export default function Anagram() {
                 <Scoreboard score={score} amountGuessed={amountGuessed} />
                 <Slots currentWord={currentWord} />
                 {(isActive || endGame) &&
-                <Keys keys={letters} availableLetters={availableLetters} />}
+                    <Keys keys={letters} />
+                }
+                {(isActive || endGame) && <Refresh letters = {letters} setLetters = {setLetters}/>}
             </div>
             <div>
                 {startGame && <StartGamePopUp highScore={0} setStartGamePopUp={setStartGame} setIsActive={setIsActive} setLetters = {setLetters} setChooseLetters = {setChooseLetters} />}
