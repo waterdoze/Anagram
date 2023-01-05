@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const WordbankModel = require('./models/Wordbank')
+const SixLettersModel = require('./models/SixLetters')
 
 require('dotenv').config()
 
@@ -35,6 +36,18 @@ app.post("/createWord", async (req, res) => {
     await newWord.save()
 
     res.json(word)
+})
+
+//choose random 6 letter word from database
+app.get("/randomWord", (req, res) => {
+    SixLettersModel.aggregate([{ $sample: { size: 1 } }], (err, result) => {
+        if (err) {
+            res.json(err)
+        }
+        else {
+            res.json(result)
+        }
+    })
 })
 
 app.listen(port, () => {

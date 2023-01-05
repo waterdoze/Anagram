@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import Axios from 'axios'
+
 import useAnagram from '../hooks/useAnagram'
+import shuffleLetters from '../hooks/shuffleLetters'
 import Keys from './Keys'
 import Scoreboard from './Scoreboard'
-
 import Slots from './Slots'
-import EndGamePopUp from '../hooks/EndGamePopUp'
-import StartGamePopUp from '../hooks/StartGamePopUp'
+import EndGamePopUp from './EndGamePopUp'
+import StartGamePopUp from './StartGamePopUp'
 import Timer from './Timer'
+import Refresh from './Refresh'
 
-export default function Anagram({ letterString }) {
+export default function Anagram() {
 
-    const letters = letterString.split("")
+    const [letters, setLetters] = useState(''.split('')) //this is the word that is being guessed
     const [endGame, setEndGame] = useState(false)
     const [startGame, setStartGame] = useState(true)
     const { handleKeyUp, currentWord, score, amountGuessed, availableLetters } = useAnagram(letters)
@@ -19,6 +22,7 @@ export default function Anagram({ letterString }) {
     const [seconds, setSeconds] = useState(6)
     ////////////////////////////////////////////////////////
     const [isActive, setIsActive] = useState(false)
+    const [chooseLetters, setChooseLetters] = useState(false)
 
     const duringEndGame = endGame ? " duringEndGame" : ""
     const duringStartGame = startGame ? " duringStartGame" : ""
@@ -47,7 +51,6 @@ export default function Anagram({ letterString }) {
         if (seconds === 0) {
             //stimuate enter was pressed
             handleKeyUp({ key: 'Enter' , endOfGame: true, resetGame: false})
-
             setIsActive(false)
             setEndGame(true)
         }
@@ -69,16 +72,36 @@ export default function Anagram({ letterString }) {
 
     }, [handleKeyUp, endGame, startGame])
 
+
+    //RANDOMLY SELECTS A WORD FROM THE WORD LIST//
+    useEffect(() => {
+
+        if(chooseLetters){
+            setLetters(''.split(''))
+            Axios.get(`http://localhost:3001/randomWord`).then((response) => {
+                console.log(response.data[0].word)
+
+                //shuffle letters
+    
+                setLetters(shuffleLetters(response.data[0].word.split("")))
+            })
+        }
+        setChooseLetters(false)
+    } ,[letters, chooseLetters])
+
     return (
         <div className='container'>
             <div className={"Game" + duringEndGame + duringStartGame}>
                 <Timer seconds={seconds} />
                 <Scoreboard score={score} amountGuessed={amountGuessed} />
                 <Slots currentWord={currentWord} />
-                <Keys keys={letters} availableLetters={availableLetters} />
+                {(isActive || endGame) &&
+                    <Keys keys={letters} />
+                }
+                {(isActive || endGame) && <Refresh letters = {letters} setLetters = {setLetters}/>}
             </div>
             <div>
-                {startGame && <StartGamePopUp highScore={0} setStartGamePopUp={setStartGame} setIsActive={setIsActive} />}
+                {startGame && <StartGamePopUp highScore={0} setStartGamePopUp={setStartGame} setIsActive={setIsActive} setLetters = {setLetters} setChooseLetters = {setChooseLetters} />}
             </div>
             <div>
                 {endGame && <EndGamePopUp score={score} amountGuessed={amountGuessed} setEndGamePopUp={setEndGame} setStartGamePopUp={setStartGame} setSeconds={setSeconds} handleKeyUp={handleKeyUp}/>}
