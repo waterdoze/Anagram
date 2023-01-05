@@ -44,8 +44,7 @@ const useAnagram = (letters) => {
                 if (endOfGame) {
                     setCurrentWord('')
                     for (let i = 0; i < letters.length; i++) {
-                        var letter = document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')')
-                        letter.style.backgroundColor = '#444440'
+                        document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
                     }
                 }
                 if (resetGame) {
@@ -62,6 +61,12 @@ const useAnagram = (letters) => {
 
                 if (!response.data) {
                     console.log("word doesn't exist!")
+                    if (endOfGame) {
+                        setCurrentWord('')
+                        for (let i = 0; i < letters.length; i++) {
+                            document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
+                        }
+                    }
                 }
                 else {
                     console.log('word found!\n', response.data)
@@ -80,8 +85,8 @@ const useAnagram = (letters) => {
             available_letters[currentWord[currentWord.length - 1]] += 1
             //unblackout the letter that was just pressed
 
-            var letter = document.querySelector('.row.keys>div:nth-child(' + (last_letter_index + 1) + ')')
-            letter.style.backgroundColor = '#444440'
+            document.querySelector('.row.keys>div:nth-child(' + (last_letter_index + 1) + ')').style.backgroundColor = '#444440'
+            
 
             setCurrentWord((prev) => {
                 return prev.slice(0, -1)
@@ -96,8 +101,7 @@ const useAnagram = (letters) => {
 
             //blackout the letter that was just pressed
             var letter_index = letter_indexes[key.toLowerCase()].shift()
-            var letter_i = document.querySelector('.row.keys>div:nth-child(' + (letter_index + 1) + ')')
-            letter_i.style.backgroundColor = 'rgb(37, 35, 35)'
+            document.querySelector('.row.keys>div:nth-child(' + (letter_index + 1) + ')').style.backgroundColor = 'rgb(37, 35, 35)'
 
         }
 
@@ -149,8 +153,7 @@ const useAnagram = (letters) => {
         //unblackout all the letters
 
         for (let i = 0; i < letters.length; i++) {
-            var letter = document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')')
-            letter.style.backgroundColor = '#444440'
+            document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
         }
     }
 
