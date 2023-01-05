@@ -34,8 +34,7 @@ const useAnagram = (letters) => {
             }
             letter_indexes[currentWord[i]].shift()
         }
-        console.log(letter_indexes)
-
+        
         //check if key pressed is enter and if the word has been guessed before and if the word is long enough and TODO: if the word is within the dictionary
         if (key === 'Enter') {
 
