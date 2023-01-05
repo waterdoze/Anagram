@@ -52,7 +52,6 @@ export default function Anagram() {
             handleKeyUp({ key: 'Enter' , endOfGame: true, resetGame: false})
             setIsActive(false)
             setEndGame(true)
-            setLetters(''.split(''))
         }
 
     }, [seconds])
@@ -77,6 +76,7 @@ export default function Anagram() {
     useEffect(() => {
 
         if(chooseLetters){
+            setLetters(''.split(''))
             Axios.get(`http://localhost:3001/randomWord`).then((response) => {
                 setLetters(response.data[0].word.split(''))
             })
@@ -90,7 +90,7 @@ export default function Anagram() {
                 <Timer seconds={seconds} />
                 <Scoreboard score={score} amountGuessed={amountGuessed} />
                 <Slots currentWord={currentWord} />
-                {isActive &&
+                {(isActive || endGame) &&
                 <Keys keys={letters} availableLetters={availableLetters} />}
             </div>
             <div>
