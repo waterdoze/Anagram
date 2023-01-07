@@ -40,19 +40,26 @@ const useAnagram = (letters) => {
 
             if (usedWords.includes(currentWord) || currentWord.length < 3) {
                 console.log('already guessed this word, try again please : or word is too short')
-                if (endOfGame) {
-                    setCurrentWord('')
-                    for (let i = 0; i < letters.length; i++) {
-                        document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
-                    }
-                }
                 if (resetGame) {
-                    setCurrentWord('')
+                    
                     setAmountGuessed(0)
                     setScore(0)
                     setUsedWords([])
                 }
+                //flash the letters that were used to make the word red
+                for (let i = 0; i < currentWord.length; i++) {
+                    document.querySelector('.row.slots>div:nth-child(' + (i + 1) + ')').style.backgroundColor = 'rgb(255,0, 0)'
+                }
 
+                //reset the letters that were used to make the word
+                for (let i = 0; i < letters.length; i++) {
+                    document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
+                }
+                
+
+                setTimeout(() => {
+                    setCurrentWord('')
+                }, 100)
                 return
             }
 
@@ -60,20 +67,29 @@ const useAnagram = (letters) => {
 
                 if (!response.data) {
                     console.log("word doesn't exist!")
-                    if (endOfGame) {
-                        setCurrentWord('')
-                        for (let i = 0; i < letters.length; i++) {
-                            document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
-                        }
+
+                    //flash the letters that were used to make the word red
+                    for (let i = 0; i < currentWord.length; i++) {
+                        document.querySelector('.row.slots>div:nth-child(' + (i + 1) + ')').style.backgroundColor = 'rgb(255,0, 0)'
                     }
+
+                    //reset the letters that were used to make the word
+                    setTimeout(() => {
+                        setCurrentWord('')
+                    }, 100)
+                    for (let i = 0; i < letters.length; i++) {
+                        document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
+                    }
+                    
                 }
                 else {
                     console.log('word found!\n', response.data)
                     handleCorrectGuess(resetGame)
                 }
-
+                
                 return
             })
+            
 
         }
         
@@ -142,18 +158,27 @@ const useAnagram = (letters) => {
         }
 
         console.log('new word guessed:', currentWord, '\namount guessed:', amountGuessed)
-        setCurrentWord('')
         if (resetGame) {
-            setCurrentWord('')
             setAmountGuessed(0)
             setScore(0)
             setUsedWords([])
         }
+        
         //unblackout all the letters
-
+        
         for (let i = 0; i < letters.length; i++) {
             document.querySelector('.row.keys>div:nth-child(' + (i + 1) + ')').style.backgroundColor = '#444440'
         }
+        
+        //flash the letters that were used to make the word green
+        for (let i = 0; i < currentWord.length; i++) {
+            document.querySelector('.row.slots>div:nth-child(' + (i + 1) + ')').style.backgroundColor = 'rgb(0, 255, 0)'
+        }
+        
+        setTimeout(() => {
+            setCurrentWord('')
+        }, 100)
+        
     }
 
     return { handleKeyUp, currentWord, amountGuessed, score }

@@ -19,7 +19,7 @@ export default function Anagram() {
     const { handleKeyUp, currentWord, score, amountGuessed, availableLetters } = useAnagram(letters)
 
     ////////////amount of time allowed each game////////////
-    const [seconds, setSeconds] = useState(5)
+    const [seconds, setSeconds] = useState(60)
     ////////////////////////////////////////////////////////
     const [isActive, setIsActive] = useState(false)
     const [chooseLetters, setChooseLetters] = useState(false)
