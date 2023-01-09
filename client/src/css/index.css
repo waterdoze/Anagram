@@ -127,3 +127,29 @@ code {
 .refresh{
     
 }
+
+.logoutButton {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    margin: 2em;
+    width: 5rem;
+    height: 3rem;
+    border: 1px solid #444440;
+    border-radius: 1em;
+
+    background-color: #444440 ;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: rgb(223, 218, 218);
+
+    
+}
+
+.logoutButton:hover{
+    background-color: #585252e7;
+    color: black;
+}
