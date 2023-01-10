@@ -138,7 +138,7 @@ code {
     border: 1px solid #444440;
     border-radius: 1em;
 
-    background-color: #444440 ;
+    background-color: #444440;
     
     display: flex;
     justify-content: center;
@@ -152,4 +152,18 @@ code {
 .logoutButton:hover{
     background-color: #585252e7;
     color: black;
+}
+
+.logWrap {
+    display: block;
+    border: 1px solid #444440;
+    border-radius: 1em;
+    background-color: #444440;
+    padding: 1em;
+
+}
+
+.logWrap>form>div {
+    display: block;
+    margin: 1em;
 }
