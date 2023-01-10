@@ -4,7 +4,6 @@ import Axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%\\)\\(:]).{8,24}$/;
 
 const Register = () => {
 
@@ -37,7 +36,6 @@ const Register = () => {
     }, [user])
 
     useEffect(() => {
-        setValidPwd(PWD_REGEX.test(pwd));
         setValidMatch(pwd === matchPwd);
     }, [pwd, matchPwd])
 
@@ -55,14 +53,14 @@ const Register = () => {
         e.preventDefault();
         // if button enabled with JS hack
         const v1 = USER_REGEX.test(user);
-        const v2 = PWD_REGEX.test(pwd);
-        if (!v1 || !v2) {
+        if (!v1) {
             setErrMsg("Invalid Entry");
             return;
         }
 
         const response = await Axios.get(`http://localhost:3001/existsUser/${user}`)
-        if (response) {
+        console.log(response)
+        if (response.data) {
             console.log("username already taken")
             return
         }
@@ -73,7 +71,6 @@ const Register = () => {
                 JSON.stringify({ username: user, password: pwd }),
                 {
                     headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true
                 }
             );
             console.log(JSON.stringify(response?.data));
@@ -173,7 +170,7 @@ const Register = () => {
                     </div>
 
 
-                    <button disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</button>
+                    <button disabled={!validName  || !validMatch ? true : false}>Sign Up</button>
                 </form>
                 <p>
                     Already registered?<br />
