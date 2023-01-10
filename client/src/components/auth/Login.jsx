@@ -1,96 +1,117 @@
 import React from 'react'
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Form } from 'react-router-dom';
 import Axios from 'axios'
 
 const Login = ({ isSignedIn, setIsSignedIn }) => {
-    const userRef = useRef();
-    const errRef = useRef();
 
-    const navigate = useNavigate()
 
-    const [user, setUser] = useState('');
-    const [pwd, setPwd] = useState('');
-    const [errMsg, setErrMsg] = useState('');
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        userRef.current.focus();
-    }, [])
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({});
 
-    useEffect(() => {
-        setErrMsg('');
-    }, [user, pwd])
 
-    useEffect(() => {
-        if (isSignedIn) {
-            navigate('/game')
+useEffect(() =>{
+    if(isSignedIn){
+        navigate('/game')
+    }
+}, [isSignedIn])
+
+    const handleInputChange = (e) => {
+        const {id, value} = e.target;
+        switch(id){
+            case 'userName':
+                setUsername(value);
+                break;
+            case 'password':
+                setPassword(value);
+                break;
+            default:
+                console.log("error")
         }
-    }, [isSignedIn])
+    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    const handleSubmit = async () => {
+        console.log("Username: " + username);
+        console.log('Password: ' + password);
 
         const response = await Axios.post('http://localhost:3001/userLogin',
-            JSON.stringify({ username: user, password: pwd }),
+            JSON.stringify({ username: username, password: password }),
             {
                 headers: { 'Content-Type': 'application/json' }
             }
         )
 
-        console.log(response)
-        console.log(response.data)
-
         if (response.data.status === 'ok') {
             setIsSignedIn(true)
         }
         else {
-            navigate('/')
+            setErrors({ username: "Username or password is incorrect" })
         }
     }
 
 
-
     return (
-        <div>
-            <section className='logWrap'>
-                <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                <h1>Sign In</h1>
-                <form onSubmit={handleSubmit}>
+        <Form className="form">
+            <div className = "title"><u>Login</u></div>
+
+            <div className="form-body">
+                <div className="form-username">
+
                     <div>
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            ref={userRef}
-                            autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
-                            value={user}
-                            required
-                        />
+                        <label className="form-label" htmlFor="userName"><b>Username</b> </label>
                     </div>
 
                     <div>
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            onChange={(e) => setPwd(e.target.value)}
-                            value={pwd}
-                            required
-                        />
+                        <input className="form-input" 
+                        type="text" 
+                        id="userName" 
+                        value = {username}
+                        onChange = {(e) => handleInputChange(e)}
+                        placeholder="Username"/>
                     </div>
 
-                    <button>Sign In</button>
-                </form>
-                <p>
-                    Need an Account?<br />
-                    <span>
-                        {/*put router link here*/}
-                        <a href="/register">Sign Up</a>
-                    </span>
-                </p>
-            </section>
-        </div>
+                </div>
+                <div className="form-password">
+
+                    <div>
+                        <label className="form-label" htmlFor="password"><b>Password</b> </label>
+                    </div>
+
+                    <div>
+                        <input className="form-input" 
+                        type="password"  
+                        id="password" 
+                        value = {password}
+                        onChange = {(e) => handleInputChange(e)}
+                        placeholder="Password"/>
+                    </div>
+
+                </div>
+
+
+                <div className="form-footer">
+                    <button onClick={()=>handleSubmit()} type="submit" className="submit-button">Sign In</button>
+                </div>
+
+                {Object.keys(errors).length > 0 && (
+                <div className='form-errors'>
+                    {Object.values(errors).map(value => <li key={value}>{value}</li>)}
+                    
+                </div>
+                )}
+            </div>
+
+            <p>
+                Need an Account?<br />
+                <span>
+                    {/*put router link here*/}
+                    <a className = "link" href="/register">Sign Up</a>
+                </span>
+            </p>
+        </Form>      
     )
 }
 

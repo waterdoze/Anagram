@@ -17,8 +17,14 @@
     margin-bottom: 2em;
 }
 
+.form-label{
+    font-size: 1.25em;
+}
 
 .form-input{
+    border: 2px solid beige;
+    padding: 10px;
+    border-radius: 12px;
     width: 75%;
 }
 
@@ -34,4 +40,22 @@
 a:visited { 
     text-decoration: none; 
     color: orange; 
+}
+
+.submit-button{
+    background-color: rgba(0, 132, 255, 0.671);
+    border: none;
+    color: beige;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 12px;
+}
+
+.submit-button:hover{
+    cursor: pointer;
+    background-color: rgba(1, 79, 153, 0.671);
 }

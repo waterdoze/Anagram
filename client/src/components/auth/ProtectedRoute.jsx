@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom'
 const ProtectedRoute = ({ isSignedIn, children }) => {
 
     if (!isSignedIn) {
+        console.log("Not signed in")
         return <Navigate to="/" replace />
     }
     return children
