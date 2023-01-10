@@ -1,0 +1,37 @@
+.form{
+    display: block;
+    border-radius: 1em;
+    padding: 0 1em;
+    background-color: #444440;
+    margin: 0 auto;
+    border: 1px solid beige;
+    width: 400px;
+}
+
+.title{
+    font-size: 3em;
+    margin-bottom: .75em;
+}
+
+.form-body > *{
+    margin-bottom: 2em;
+}
+
+
+.form-input{
+    width: 75%;
+}
+
+.form-footer{
+    margin-bottom: 1em;
+}
+
+.form-errors{
+    border: 1px solid red;
+    margin-bottom: 1em;
+    
+}
+a:visited { 
+    text-decoration: none; 
+    color: orange; 
+}

@@ -85,7 +85,6 @@ export default function Anagram({ setIsSignedIn }) {
                 console.log(response.data[0].word)
 
                 //shuffle letters
-
                 setLetters(shuffleLetters(response.data[0].word.split("")))
             })
         }

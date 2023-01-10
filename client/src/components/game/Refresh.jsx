@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import shuffleLetters from '../../hooks/shuffleLetters'
 
 export default function Refresh({letters, setLetters}){

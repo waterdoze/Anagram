@@ -84,7 +84,7 @@ const Login = ({ isSignedIn, setIsSignedIn }) => {
                 </form>
                 <p>
                     Need an Account?<br />
-                    <span className="line">
+                    <span>
                         {/*put router link here*/}
                         <a href="/register">Sign Up</a>
                     </span>

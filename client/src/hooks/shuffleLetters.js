@@ -1,6 +1,3 @@
-import React from "react";
-
-
 const shuffleLetters = (letters) => {
     console.log(letters)
     let scramble = letters
