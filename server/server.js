@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const WordbankModel = require('./models/Wordbank')
 const SixLettersModel = require('./models/SixLetters')
 const UserModel = require('./models/Users')
+const GameModel = require('./models/Game')
 
 require('dotenv').config()
 
@@ -51,6 +52,7 @@ app.get("/randomWord", (req, res) => {
     })
 })
 
+//Checks if user exists in database and if password is correct
 app.post("/userLogin", async (req, res) => {
     const { username, password } = req.body
 
@@ -68,6 +70,8 @@ app.post("/userLogin", async (req, res) => {
     }
 })
 
+
+//Creates a new user in database
 app.post("/userRegister", async (req, res) => {
     const { username, password } = req.body
 
@@ -77,13 +81,17 @@ app.post("/userRegister", async (req, res) => {
             password: password
         })
 
+
         res.send({ status: 'ok' })
+
+
     }
     catch (err) {
         res.send({ status: 'error' })
     }
 })
 
+//checks if username exists in database
 app.get("/existsUser/:word", (req, res) => {
     UserModel.findOne({"username": req.params['word']}, (err, result) => {
         if (err) {
@@ -94,6 +102,31 @@ app.get("/existsUser/:word", (req, res) => {
         }
     })
 })
+
+//creates a new game in database
+app.post("/createGame", async (req, res) => {
+    const { sixLetterWord, Player1, Winner } = req.body //TODO: add Player2
+
+    try{
+        let game = new GameModel({
+            sixLetterWord: sixLetterWord,
+            Player1: Player1,
+            Winner: Winner
+        });
+
+        let result = await game.save()
+
+
+        res.send(result._id)
+        res.send({ status: 'ok' })
+
+    }
+    catch (err) {
+        res.send({ status: 'error' })
+    }
+})
+    
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
