@@ -1,11 +1,10 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 import shuffleLetters from '../../hooks/shuffleLetters'
-import { useEffect } from 'react'
 
-export default function Game({setIsSignedIn}){
+export default function Game() {
 
     const navigate = useNavigate()
     

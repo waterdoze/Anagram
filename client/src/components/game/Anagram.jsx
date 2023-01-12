@@ -3,7 +3,6 @@ import Axios from 'axios'
 import { useParams } from 'react-router-dom'
 
 import useAnagram from '../../hooks/useAnagram'
-import shuffleLetters from '../../hooks/shuffleLetters'
 import Keys from './Keys'
 import Scoreboard from './Scoreboard'
 import Slots from './Slots'
@@ -11,15 +10,19 @@ import EndGamePopUp from './EndGamePopUp'
 import StartGamePopUp from './StartGamePopUp'
 import Timer from './Timer'
 import Refresh from './Refresh'
+import { useContext } from 'react'
+import AuthContext from '../../context/AuthContext'
 
 export default function Anagram({ setIsSignedIn }) {
+
+    const { auth, setAuth } = useContext(AuthContext)
 
     const gameId = useParams().gameId
     
     const [letters, setLetters] = useState(''.split(''))
     const [endGame, setEndGame] = useState(false)
     const [startGame, setStartGame] = useState(true)
-    const { handleKeyUp, currentWord, score, amountGuessed, availableLetters } = useAnagram(letters)
+    const { handleKeyUp, currentWord, score, amountGuessed } = useAnagram(letters)
 
     ////////////amount of time allowed each game////////////
     const [seconds, setSeconds] = useState(6)
@@ -31,7 +34,7 @@ export default function Anagram({ setIsSignedIn }) {
     const duringStartGame = startGame ? " duringStartGame" : ""
 
     const handleLogOut = () => {
-        setIsSignedIn(false)
+        setAuth({...auth, isSignedIn: false})
     }
     //TIMER LOGIC//
     useEffect(() => {

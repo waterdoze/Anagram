@@ -1,10 +1,13 @@
 import React from 'react'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Form } from 'react-router-dom';
 import Axios from 'axios'
+import { useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
 
-const Login = ({ isSignedIn, setIsSignedIn }) => {
+const Login = () => {
 
+    const { auth, setAuth } = useContext(AuthContext)
 
     const navigate = useNavigate();
 
@@ -13,15 +16,19 @@ const Login = ({ isSignedIn, setIsSignedIn }) => {
     const [errors, setErrors] = useState({});
 
 
-useEffect(() =>{
-    if(isSignedIn){
-        navigate('/game')
-    }
-}, [isSignedIn])
+    useEffect(() => {
+        if (auth.isSignedIn) {
+            navigate('/game')
+        }
+    }, [auth.isSignedIn])
+
+    useEffect(() => {
+        console.log("auth is ", auth)
+    }, [auth])
 
     const handleInputChange = (e) => {
-        const {id, value} = e.target;
-        switch(id){
+        const { id, value } = e.target;
+        switch (id) {
             case 'userName':
                 setUsername(value);
                 break;
@@ -45,7 +52,8 @@ useEffect(() =>{
         )
 
         if (response.data.status === 'ok') {
-            setIsSignedIn(true)
+            setAuth({ ...auth, username: username, password: password, isSignedIn: true })
+
         }
         else {
             setErrors({ username: "Username or password is incorrect" })
@@ -55,7 +63,7 @@ useEffect(() =>{
 
     return (
         <Form className="form">
-            <div className = "title"><u>Login</u></div>
+            <div className="title"><u>Login</u></div>
 
             <div className="form-body">
                 <div className="form-username">
@@ -65,12 +73,12 @@ useEffect(() =>{
                     </div>
 
                     <div>
-                        <input className="form-input" 
-                        type="text" 
-                        id="userName" 
-                        value = {username}
-                        onChange = {(e) => handleInputChange(e)}
-                        placeholder="Username"/>
+                        <input className="form-input"
+                            type="text"
+                            id="userName"
+                            value={username}
+                            onChange={(e) => handleInputChange(e)}
+                            placeholder="Username" />
                     </div>
 
                 </div>
@@ -81,26 +89,26 @@ useEffect(() =>{
                     </div>
 
                     <div>
-                        <input className="form-input" 
-                        type="password"  
-                        id="password" 
-                        value = {password}
-                        onChange = {(e) => handleInputChange(e)}
-                        placeholder="Password"/>
+                        <input className="form-input"
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => handleInputChange(e)}
+                            placeholder="Password" />
                     </div>
 
                 </div>
 
 
                 <div className="form-footer">
-                    <button onClick={()=>handleSubmit()} type="submit" className="submit-button">Sign In</button>
+                    <button onClick={() => handleSubmit()} type="submit" className="submit-button">Sign In</button>
                 </div>
 
                 {Object.keys(errors).length > 0 && (
-                <div className='form-errors'>
-                    {Object.values(errors).map(value => <li key={value}>{value}</li>)}
-                    
-                </div>
+                    <div className='form-errors'>
+                        {Object.values(errors).map(value => <li key={value}>{value}</li>)}
+
+                    </div>
                 )}
             </div>
 
@@ -108,10 +116,10 @@ useEffect(() =>{
                 Need an Account?<br />
                 <span>
                     {/*put router link here*/}
-                    <a className = "link" href="/register">Sign Up</a>
+                    <a className="link" href="/register">Sign Up</a>
                 </span>
             </p>
-        </Form>      
+        </Form>
     )
 }
 
