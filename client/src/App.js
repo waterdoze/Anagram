@@ -6,6 +6,7 @@ import { useState } from 'react';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import Game from './components/game/Game'
 
 
 function App() {
@@ -19,7 +20,8 @@ function App() {
                 <Route path='/' element={<Home isSignedIn={isSignedIn} setIsSignedIn={setIsSignedIn} />} />
                 <Route path='/login' element={<Login isSignedIn={isSignedIn} setIsSignedIn={setIsSignedIn}/>} />
                 <Route path='/register' element={<Register />} />
-                <Route path='/game' element={<ProtectedRoute isSignedIn={isSignedIn}><Anagram setIsSignedIn={setIsSignedIn} /></ProtectedRoute>} />
+                <Route path='/game' element={<ProtectedRoute isSignedIn={isSignedIn}><Game setIsSignedIn={setIsSignedIn} /></ProtectedRoute>} />
+                <Route path='/game/:gameId' element={<ProtectedRoute isSignedIn={isSignedIn}><Anagram setIsSignedIn={setIsSignedIn} /></ProtectedRoute>} />
             </Route>
 
         )

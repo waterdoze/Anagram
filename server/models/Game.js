@@ -4,20 +4,19 @@ const UserModel = require('./Users')
 
 const GameSchema = new mongoose.Schema({
     sixLetterWord: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'SixLettersModel',
+        type: String,
         required: true
     },
-    Player1: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserModel',
-        score:{
-            type: Number,
-            default: 0,
-            required: true
-        },
-        required: true
-    },
+    // Player1: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'UserModel',
+    //     score:{
+    //         type: Number,
+    //         default: 0,
+    //         required: true
+    //     },
+    //     required: true
+    // },
 
     /*TODO: create two player interaction*/
 
@@ -31,11 +30,11 @@ const GameSchema = new mongoose.Schema({
     //     required: true
     // },
 
-    Winner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserModel',
-        required: false
-    }
+    // Winner: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'UserModel',
+    //     required: false
+    // }
 })
 
 

@@ -81,12 +81,11 @@ app.post("/userRegister", async (req, res) => {
             password: password
         })
 
-
         res.send({ status: 'ok' })
-
 
     }
     catch (err) {
+        console.log(err)
         res.send({ status: 'error' })
     }
 })
@@ -105,20 +104,15 @@ app.get("/existsUser/:word", (req, res) => {
 
 //creates a new game in database
 app.post("/createGame", async (req, res) => {
-    const { sixLetterWord, Player1, Winner } = req.body //TODO: add Player2
-
+    const { sixLetterWord } = req.body //TODO: add Players
     try{
         let game = new GameModel({
-            sixLetterWord: sixLetterWord,
-            Player1: Player1,
-            Winner: Winner
+            sixLetterWord: sixLetterWord.join(''),
         });
 
         let result = await game.save()
 
-
-        res.send(result._id)
-        res.send({ status: 'ok' })
+        res.json(result)
 
     }
     catch (err) {
@@ -126,6 +120,17 @@ app.post("/createGame", async (req, res) => {
     }
 })
     
+//get game data by id
+app.get("/getGame/:id", (req, res) => {
+    GameModel.findOne({"_id": req.params['id']}, (err, result) => {
+        if (err) {
+            res.json(err)
+        }
+        else {
+            res.json(result)
+        }
+    })
+})
 
 
 app.listen(port, () => {
